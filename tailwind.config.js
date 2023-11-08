@@ -12,7 +12,7 @@ module.exports = {
     colors: {
       primary: {
         "text": "#bbc6ce",
-        "outline-hover": "#59b4ff",
+        "outline-hover": "#69c4ff",
         "outline": "#3ea0f0",
         "card-bg": "#233748",
         "card-bg-hover": "#2a4a5f",
@@ -25,6 +25,9 @@ module.exports = {
         "default-darker": "#dce0e5",
         "default-darkest": "#ccd0e0",
         "text": "#000000"
+      },
+      zinger: {
+        "default": "#e78660",
       }
     },
     fontSize: {

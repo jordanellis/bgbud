@@ -1,5 +1,3 @@
-"use client";
-
 import { Anchor } from "../components";
 import { BGData } from "../util/fetch";
 

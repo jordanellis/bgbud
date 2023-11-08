@@ -69,6 +69,8 @@ export async function fetchAllBGData(): Promise<BGData[]> {
 	}
 }
 
+export const skipPlayers = ["Ellis fam", "Stevens fam"];
+
 export async function fetchAllUserBGData(): Promise<Array<{
 	name: string,
 	wins: number,
@@ -76,13 +78,13 @@ export async function fetchAllUserBGData(): Promise<Array<{
 }>> {
 	const data = await fetchAllBGData();
 	const arr = data.map(item => item.Players.split(", "));
-	const allPlayers = Array.from(new Set(arr.flat(2))).filter(item => item !== "Ellis fam");
+	const allPlayers = Array.from(new Set(arr.flat(2))).filter(item => !skipPlayers.includes(item));
 	const playerWinData = new Array<{ name: string, wins: number, plays: number }>;
 	allPlayers.forEach(player => {
 		playerWinData.push({name: player, wins: 0, plays: 0});
 	});
 	data.forEach(gamePlayed => {
-		const players = gamePlayed.Players.split(", ").filter(players => players !== "Ellis fam");
+		const players = gamePlayed.Players.split(", ").filter(players => !skipPlayers.includes(players));
 		const winners = gamePlayed.Winner.length !== 0 ? gamePlayed.Winner : gamePlayed["Co-op Success"];
 		players.forEach(player => {
 			playerWinData.find((row, i) => {
@@ -115,6 +117,12 @@ export async function fetchAllGameBGData(): Promise<Array<{
 }>> {
 	const data = await fetchAllBGData();
 	
+	const returnGameData = getGamePlayTotals(data);
+
+	return returnGameData;
+}
+
+export function getGamePlayTotals(data: BGData[]) {
 	const uniqueGames = Array.from(data.map(item => item["Game Name"].trim()).filter((game, i, a) => a.indexOf(game) === i));
 	const returnGameData = new Array<{game: string, plays: number}>;
 	uniqueGames.forEach(game => {

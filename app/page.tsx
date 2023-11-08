@@ -1,7 +1,7 @@
 import React from "react";
 import { fetchAllBGData } from "../util/fetch";
 import GamesTable from "./GamesTable";
-import { Card } from "../components";
+import HomeOverview from "./HomeOverview";
 
 async function getData() {
   const data = await fetchAllBGData();
@@ -14,13 +14,7 @@ const IndexPage = async () => {
 
   return (
     <div className="flex flex-col gap-4">
-      <Card>
-        <ul>
-          <li>H index</li>
-          <li>Players played with</li>
-          <li>Play totals?</li>
-        </ul>
-      </Card>
+      <HomeOverview data={data} />
       <GamesTable data={data} />
     </div>
   );

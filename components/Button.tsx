@@ -1,5 +1,9 @@
+"use client";
+
 import { cva, cx } from "class-variance-authority";
+import { useRouter } from "next/navigation";
 import { ButtonHTMLAttributes } from "react";
+import { onStart } from "./NavigationEvents";
 
 const button = cva(
   [
@@ -25,9 +29,19 @@ const button = cva(
           "focus:bg-secondary-default-darker",
           "focus:ring-primary-outline-hover",
         ],
+        "secondary-filled": [
+          "rounded-2xl px-4 py-3",
+          "bg-primary-card-bg text-primary-text",
+          "hover:bg-primary-card-bg-hover",
+          "hover:ring-zinger-default",
+          "active:ring-zinger-default",
+          "active:bg-primary-card-bg-active",
+          "focus:bg-primary-card-bg-active",
+          "focus:ring-zinger-default",
+        ],
         icon: [
           "rounded-full w-10 p-2",
-          "bg-primary-card-bg text-secondary-text",
+          "bg-primary-card-bg text-primary-text",
           "hover:bg-primary-card-bg-hover",
           "hover:ring-primary-card-outline",
           "active:ring-primary-card-outline",
@@ -40,18 +54,36 @@ const button = cva(
   }
 );
 
-interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "filled" | "icon";
+export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+  to?: string;
+  variant?: "filled" | "secondary-filled" | "icon";
 }
 
 export const Button = ({
+  to,
   variant,
   className,
   children,
+  onClick,
   ...rest
 }: ButtonProps) => {
+  const router = useRouter();
+
+  function displayLoading() {
+    const { pathname, search, hash } = window.location;
+    if (to !== pathname + search + hash) onStart();
+  }
+
   return (
-    <button className={cx(button({ variant }), className)} {...rest}>
+    <button
+      className={cx(button({ variant }), className)}
+      onClick={(e) => {
+        to && displayLoading();
+        onClick && onClick(e);
+        to && router.push(to);
+      }}
+      {...rest}
+    >
       {children}
     </button>
   );

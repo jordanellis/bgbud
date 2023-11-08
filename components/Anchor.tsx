@@ -9,14 +9,20 @@ const anchorStyles = cx(
   "text-primary-outline",
   "cursor-pointer inline-block",
   "transition ease-in-out duration-300",
-  "hover:text-primary-outline-hover hover:underline"
+  "hover:text-primary-outline-hover"
 );
 
 interface AnchorProps extends AnchorHTMLAttributes<HTMLAnchorElement> {
   to: string;
 }
 
-export const Anchor = ({ className, children, to, ...rest }: AnchorProps) => {
+export const Anchor = ({
+  className,
+  children,
+  to,
+  onClick,
+  ...rest
+}: AnchorProps) => {
   const router = useRouter();
 
   function displayLoading() {
@@ -28,8 +34,9 @@ export const Anchor = ({ className, children, to, ...rest }: AnchorProps) => {
     <a
       tabIndex={0}
       className={cx(anchorStyles, className)}
-      onClick={() => {
+      onClick={(e) => {
         displayLoading();
+        onClick && onClick(e);
         router.push(to);
       }}
       onKeyDown={(e) => {
